@@ -13,7 +13,6 @@ public class HexGrid : MonoBehaviour {
 	public Text cellLabelPrefab;
 
     public Color defaultColor = Color.white;
-    public Color touchedColor = Color.magenta;
 
 	HexCell[] cells;
 
@@ -68,6 +67,28 @@ public class HexGrid : MonoBehaviour {
         cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         //asign default color
         cell.color = defaultColor;
+        //first cell in each row doesnt have an east neighbour but all other cells in the row do
+        if (x > 0 ) {
+            cell.SetNeighbour(HexDirection.W, cells[i - 1]);
+        }
+        //skip first row
+        if (z > 0) {
+            //all cells in even rows have a SE neighbour so connect those
+            if ((z & 1) == 0) {
+                cell.SetNeighbour(HexDirection.SE, cells[i - width]);
+                //connect to SW neighbour (except from first cell in each row)
+                if (x > 0) {
+                    cell.SetNeighbour(HexDirection.SW, cells[i - width - 1]);
+                }
+            }
+            //mirrored logic for Odd rows
+            else {
+                cell.SetNeighbour(HexDirection.SW, cells[i - width]);
+                if (x < width - 1) {
+                    cell.SetNeighbour(HexDirection.SE, cells[i - width + 1]);
+                }
+            }
+        }
 
         //place newline character between X and Z so they end up on separate lines
         Text label = Instantiate<Text>(cellLabelPrefab);

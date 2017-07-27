@@ -15,7 +15,7 @@ public static class HexMetrics {
     /// define positions of the six corners relative to the cell's center
     /// position the corner at the top and adds the rest in clockwise order in the xz plane
     /// </summary>
-    public static Vector3[] corners = {
+    static Vector3[] corners = {
 		new Vector3(0f, 0f, outerRadius),
 		new Vector3(innerRadius, 0f, 0.5f * outerRadius),
 		new Vector3(innerRadius, 0f, -0.5f * outerRadius),
@@ -24,4 +24,22 @@ public static class HexMetrics {
 		new Vector3(-innerRadius, 0f, 0.5f * outerRadius),
 		new Vector3(0f, 0f, outerRadius)
 	};
+
+    /// <summary>
+    /// first corner
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    public static Vector3 GetFirstCorner (HexDirection direction) {
+        return corners[(int)direction];
+    }
+
+    /// <summary>
+    /// second corner
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    public static Vector3 GetSecondCorner (HexDirection direction) {
+        return corners[(int)direction + 1];
+    }
 }

@@ -23,6 +23,15 @@ public struct HexCoordinates {
         }
     }
 
+    /// <summary>
+    /// compute the Y coordinate to use in the string method
+    /// </summary>
+    public int Y {
+        get {
+            return -X - Z;
+        }
+    }
+
     public HexCoordinates (int x, int z) {
         this.x = x;
         this.z = z;
@@ -36,15 +45,6 @@ public struct HexCoordinates {
     /// <returns></returns>
     public static HexCoordinates FromOffsetCoordinates (int x, int z) {
         return new HexCoordinates(x - z / 2, z);
-    }
-
-    /// <summary>
-    /// compute the Y coordinate to use in the string method
-    /// </summary>
-    public int Y {
-        get {
-            return -X - Z;
-        }
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public struct HexCoordinates {
         if (iX + iY + iZ != 0) {
             float dX = Mathf.Abs(x - iX);
             float dY = Mathf.Abs(y - iY);
-            float dZ = Mathf.Abs(iZ - iZ);
+            float dZ = Mathf.Abs(-x -y - iZ);
 
             if (dX > dY && dX > dZ) {
                 iX = -iY - iZ;
