@@ -64,31 +64,55 @@ public class HexMesh : MonoBehaviour {
     ///  center of the hexagon. 
     ///  first and second corners, 
     /// relative to its center.
+    /// 
+    /// quad blends beween the solid color and the two corner colors
     /// </summary>
     /// <param name="direction"></param>
     /// <param name="cell"></param>
-    void Triangulate (HexDirection direction, HexCell cell) {
+    void Triangulate(HexDirection direction, HexCell cell) {
         Vector3 center = cell.transform.localPosition;
-        AddTriangle(
-            center,
-            center + HexMetrics.GetFirstCorner(direction),
-            center + HexMetrics.GetSecondCorner(direction)
-        );
+        Vector3 v1 = center + HexMetrics.GetFirstSolidCorner(direction);
+        Vector3 v2 = center + HexMetrics.GetSecondSolidCorner(direction);
 
-        //retrieve all three neighbours
-        HexCell prevNeighbour = cell.GetNeighbour(direction.Previous()) ?? cell;
-        //when a cell has no neighbour use the cell itself as a substitute
-        HexCell neighbour = cell.GetNeighbour(direction) ?? cell;
-        HexCell nextNeighbour = cell.GetNeighbour(direction.Next()) ?? cell;
+        AddTriangle(center, v1, v2);
+        AddTriangleColor(cell.color);
 
-        AddTriangleColor(
-            cell.color,
-            //perform two three-way blends 
-            (cell.color + prevNeighbour.color + neighbour.color) / 3f,
-            (cell.color + neighbour.color + nextNeighbour.color) / 3f
-        );
-        
+        //add bridge when dealing with a NE connection
+        if (direction <= HexDirection.SE) {
+            TriangulateConnection(direction, cell, v1, v2);
+        }
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <param name="cell"></param>
+    /// <param name="v1"></param>
+    /// <param name="v2"></param>
+    void TriangulateConnection(HexDirection direction, HexCell cell, Vector3 v1, Vector3 v2) {
+        HexCell neighbour = cell.GetNeighbour(direction);
+        //if no neighbour then no bridge connection
+        if (neighbour == null) { return; }
+
+        //blending bridges between neighbours
+        Vector3 bridge = HexMetrics.GetBridge(direction);
+        Vector3 v3 = v1 + bridge;
+        Vector3 v4 = v2 + bridge;
+
+        AddQuad(v1, v2, v3, v4);
+        AddQuadColor(cell.color, neighbour.color);
+
+        //triangular connection
+        HexCell nextNeighbour = cell.GetNeighbour(direction.Next());
+        //if there is a neighbour
+        if (direction <= HexDirection.E && nextNeighbour != null) {
+            //triangle that connects to the next neighbour
+            AddTriangle(v2, v4, v2 + HexMetrics.GetBridge(direction.Next()));
+            AddTriangleColor(cell.color, neighbour.color, nextNeighbour.color);
+        }
+    }
+
 
     /// <summary>
     /// using 3 vertex positions adds the vertices in order
@@ -129,5 +153,34 @@ public class HexMesh : MonoBehaviour {
         colors.Add(c3);
     }
 
-    
+    void AddQuad (Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4) {
+        int vertexIndex = vertices.Count;
+        vertices.Add(v1);
+        vertices.Add(v2);
+        vertices.Add(v3);
+        vertices.Add(v4);
+        triangles.Add(vertexIndex);
+        triangles.Add(vertexIndex + 2);
+        triangles.Add(vertexIndex + 1);
+        triangles.Add(vertexIndex + 1);
+        triangles.Add(vertexIndex + 2);
+        triangles.Add(vertexIndex + 3);
+    }
+
+    void AddQuadColor (Color c1, Color c2, Color c3, Color c4) {
+        colors.Add(c1);
+        colors.Add(c2);
+        colors.Add(c3);
+        colors.Add(c4);
+    }
+
+    //variant of AddQuadColor that only needs two colors
+    void AddQuadColor (Color c1, Color c2) {
+        colors.Add(c1);
+        colors.Add(c1);
+        colors.Add(c2);
+        colors.Add(c2);
+    }
+
+
 }
