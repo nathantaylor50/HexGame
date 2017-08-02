@@ -1,8 +1,15 @@
 ﻿/// <summary>
-/// ordered list of directions for for hexcell
+/// ordered list of directions for a hexcell
 /// </summary>
 public enum HexDirection  {
     NE, E, SE, SW, W, NW
+}
+
+/// <summary>
+/// odered list of edge types for a hexcell
+/// </summary>
+public enum HexEdgeType {
+    Flat, Slope, Cliff
 }
 
 /// <summary>

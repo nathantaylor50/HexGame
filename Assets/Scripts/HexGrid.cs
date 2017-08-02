@@ -38,16 +38,18 @@ public class HexGrid : MonoBehaviour {
 	}
 
 
-    public void ColorCell (Vector3 position, Color color) {
+    public HexCell GetCell (Vector3 position) {
         position = transform.InverseTransformPoint(position);
         HexCoordinates coordinates = HexCoordinates.FromPosition(position);
         //convert the cell coordinates to the appropriate array index
         int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
-        //grab cell
-        HexCell cell = cells[index];
-        //change cell color
-        cell.color = color;
-        //triangulate the mesh again
+        return cells[index];
+    }
+
+    /// <summary>
+    /// triangulate mesh
+    /// </summary>
+    public void Refresh() {
         hexMesh.Triangulate(cells);
     }
 
@@ -96,5 +98,9 @@ public class HexGrid : MonoBehaviour {
 		label.rectTransform.anchoredPosition =
 			new Vector2(position.x, position.z);
         label.text = cell.coordinates.ToStringOnSeparateLines();
+
+        //assign reference for updating position
+        cell.uiRect = label.rectTransform;
+
 	}
 }
