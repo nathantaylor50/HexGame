@@ -12,11 +12,13 @@ public class HexGrid : MonoBehaviour {
     public Text cellLabelPrefab;
     public Color defaultColor = Color.white;
     public Color touchedColor = Color.magenta;
+    public Texture2D noiseSource;
     HexCell[] cells;
     Canvas gridCanvas;
     HexMesh hexMesh;
 
     void Awake() {
+        HexMetrics.noiseSource = noiseSource;
         gridCanvas = GetComponentInChildren<Canvas>();
         hexMesh = GetComponentInChildren<HexMesh>();
         cells = new HexCell[height * width];
@@ -31,6 +33,10 @@ public class HexGrid : MonoBehaviour {
     void Start() {
         //triangulate cells
         hexMesh.Triangulate(cells);
+    }
+
+    void OnEnable() {
+        HexMetrics.noiseSource = noiseSource;
     }
 
 
@@ -89,6 +95,9 @@ public class HexGrid : MonoBehaviour {
         label.text = cell.coordinates.ToStringOnSeperateLines();
         //UI labels position
         cell.uiRect = label.rectTransform;
+
+        //set cell's elevation so perturbation is applied now
+        cell.Elevation = 0;
     }
 
     //triangulae the mesh

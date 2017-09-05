@@ -12,11 +12,11 @@ public static class HexMetrics {
     public const float innerRadius = outerRadius * 0.866025404f;
 
     //blending metrics
-    public const float solidFactor = 0.75f;
+    public const float solidFactor = 0.8f;
     public const float blendFactor = 1f - solidFactor;
 
     //elevation step
-    public const float elevationStep = 5f;
+    public const float elevationStep = 3f;
 
     //amount of terraces per slope
     public const int terracesPerSlope = 2;
@@ -25,6 +25,12 @@ public static class HexMetrics {
     //size of the horizontal terrace steps
     public const float horizontalTerraceStepSize = 1f / terraceSteps;
     public const float verticalTerraceStepSize = 1f / (terracesPerSlope + 1);
+
+    public const float cellPerturbStrength = 4f;
+    public const float elevationPerturbStrength = 1.5f;
+    public const float noiseScale = 0.003f;
+
+    public static Texture2D noiseSource;
 
     //define the positions of the six corners relative to the cell's center.
     //corner at the top, start with this corner and add the rest in a clockwise order.
@@ -92,6 +98,15 @@ public static class HexMetrics {
         }
         //otherwise we have a cliff
         return HexEdgeType.Cliff;
+    }
+
+    //takes a world position and produce a 4D vector containing four noise samples
+    public static Vector4 SampleNoise (Vector3 position) {
+        //bilinear filtering using X and Z world coords as UV coords
+        return noiseSource.GetPixelBilinear(
+            position.x * noiseScale, 
+            position.z * noiseScale
+            );
     }
 
 }

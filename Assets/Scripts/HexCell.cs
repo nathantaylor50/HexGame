@@ -21,14 +21,25 @@ public class HexCell : MonoBehaviour {
             elevation = value;
             Vector3 position = transform.localPosition;
             position.y = value * HexMetrics.elevationStep;
+            //applies pertubation to cell's vertical position
+            position.y +=
+                (HexMetrics.SampleNoise(position).y * 2f - 1f) *
+                HexMetrics.elevationPerturbStrength;
             transform.localPosition = position;
 
             //ui
             Vector3 uiPosition = uiRect.localPosition;
-            uiPosition.z = elevation * -HexMetrics.elevationStep;
+            uiPosition.z = -position.y;
             uiRect.localPosition = uiPosition;
         }
     } 
+
+    //to get a cells position
+    public Vector3 Position {
+        get {
+            return transform.localPosition;
+        }
+    }
 
     //retrieve a cell's neighbour in one direction
     public HexCell GetNeighbour (HexDirection direction) {

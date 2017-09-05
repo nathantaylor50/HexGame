@@ -1653,6 +1653,7 @@ MonoBehaviour:
     type: 2}
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   touchedColor: {r: 1, g: 0, b: 1, a: 1}
+  noiseSource: {fileID: 2800000, guid: 06eb743b29f37db4fb82d7aaabba0d0d, type: 3}
 --- !u!4 &1553488006
 Transform:
   m_ObjectHideFlags: 0
@@ -2075,7 +2076,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 75
   m_Depth: -1
   m_CullingMask:
@@ -2085,7 +2086,7 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 1
+  m_HDR: 0
   m_AllowMSAA: 1
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -2098,13 +2099,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1866323528}
-  m_LocalRotation: {x: 0.70710665, y: -0, z: -0, w: 0.70710695}
-  m_LocalPosition: {x: 45.01, y: 10.4, z: 36}
+  m_LocalRotation: {x: 0.3810215, y: -0.0013877953, z: 0.00057192286, w: 0.92456496}
+  m_LocalPosition: {x: 46.44606, y: 72.50153, z: -42.26353}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 44.794, y: -0.172, z: 0}
 --- !u!1 &2023247663
 GameObject:
   m_ObjectHideFlags: 0
