@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// struct which used to convert to different coordinate system
-/// </summary>
 [System.Serializable]
 public struct HexCoordinates {
-
     [SerializeField]
     private int x, z;
 
@@ -16,16 +12,14 @@ public struct HexCoordinates {
             return x;
         }
     }
-
-    public int Z { 
+    
+    public int Z {
         get {
             return z;
         }
     }
 
-    /// <summary>
-    /// compute the Y coordinate to use in the string method
-    /// </summary>
+
     public int Y {
         get {
             return -X - Z;
@@ -37,66 +31,50 @@ public struct HexCoordinates {
         this.z = z;
     }
 
-    /// <summary>
-    /// create set of coordinates using regular offset coordinates
-    /// </summary>
-    /// <param name="x"></param>
-    /// <param name="z"></param>
-    /// <returns></returns>
+    //create a set of coordinates using regular offset coordinates
     public static HexCoordinates FromOffsetCoordinates (int x, int z) {
         return new HexCoordinates(x - z / 2, z);
     }
 
-    /// <summary>
-    /// override to return the coordinates on a single line
-    /// </summary>
-    /// <returns></returns>
+    //string converstion to retirn the coordinates on a single line
     public override string ToString() {
-        return "(" + 
-            X.ToString() + ", " + Y.ToString() + ", " + Z.ToString() + ")";
+        return "(" + X.ToString() + ", " + Y.ToString() + ", " + Z.ToString() + ") ";
     }
 
-    /// <summary>
-    /// puts the coordinates on serparate lines
-    /// </summary>
-    /// <returns></returns>
-    public string ToStringOnSeparateLines() {
+    //put coordinates on seperate lines
+    public string ToStringOnSeperateLines() {
         return X.ToString() + "\n" + Y.ToString() + "\n" + Z.ToString();
     }
 
+    //which coordinate belongs to a position
     public static HexCoordinates FromPosition (Vector3 position) {
-        //divide x by the horizontal width of a hexagon
         float x = position.x / (HexMetrics.innerRadius * 2f);
-        //y is a mirror of x coordinate, so negatuve of x gives us y
         float y = -x;
 
-        //every two rows shift the entire unit left
+        //shift
         float offset = position.z / (HexMetrics.outerRadius * 3f);
         x -= offset;
         y -= offset;
-
         //round to ints
         int iX = Mathf.RoundToInt(x);
         int iY = Mathf.RoundToInt(y);
-        int iZ = Mathf.RoundToInt(-x - y);
+        int iZ = Mathf.RoundToInt(-x -y);
 
-        //discard the coordinate with the largest rounding data
-        //then reconstruct it from the other two ( X + Z)
+        //if we get cords that != 0
         if (iX + iY + iZ != 0) {
             float dX = Mathf.Abs(x - iX);
             float dY = Mathf.Abs(y - iY);
             float dZ = Mathf.Abs(-x -y - iZ);
-
+            //reconstruct coord from other two (dont bother with y)
             if (dX > dY && dX > dZ) {
                 iX = -iY - iZ;
-            }
-            else if (dZ > dY) {
+            } else if (dZ > dY) {
                 iZ = -iX - iY;
             }
 
         }
 
-        //construct final coordinates
         return new HexCoordinates(iX, iZ);
+
     }
 }

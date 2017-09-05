@@ -3,25 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// in-game map editor
+/// </summary>
 public class HexMapEditor : MonoBehaviour {
 
     public Color[] colors;
     public HexGrid hexGrid;
-    int activeElevation;
-
     private Color activeColor;
+    int activeElevation;
 
     void Awake() {
         SelectColor(0);
     }
 
     void Update() {
-        if (Input.GetMouseButton(0) &&
-            !EventSystem.current.IsPointerOverGameObject()) {
+        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject()) {
             HandleInput();
         }
     }
 
+    //send raycast out
     void HandleInput() {
         Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -30,28 +32,20 @@ public class HexMapEditor : MonoBehaviour {
         }
     }
 
-    /// <summary>
-    /// handles the editing of a cell
-    /// assign elevation level
-    /// and refreshing the grid
-    /// </summary>
-    /// <param name="cell"></param>
+    public void SelectColor (int index) {
+        activeColor = colors[index];
+    }
+
+    //edit the cell then refresh the grid
     void EditCell (HexCell cell) {
         cell.color = activeColor;
+        //adjust elevation
         cell.Elevation = activeElevation;
         hexGrid.Refresh();
     }
 
-    /// <summary>
-    /// set elevation level
-    /// UI sliders work with floats, so convert float parameter into an int
-    /// </summary>
-    /// <param name="elevation"></param>
+    //set the active elevation level
     public void SetElevation(float elevation) {
         activeElevation = (int)elevation;
-    }
-
-    public void SelectColor (int index) {
-        activeColor = colors[index];
     }
 }
